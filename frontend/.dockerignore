@@ -1,0 +1,6 @@
+node_modules
+.next
+build-output
+*.log
+.git
+.env*.local

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { PRODUCTS } from "@/lib/products-data";
 import { requireAdmin } from "@/lib/backend/auth";
+import { getImageUrl } from "@/lib/storage";
 
 export async function GET(request: Request) {
   try {
@@ -75,7 +76,7 @@ export async function GET(request: Request) {
           featured: p.featured,
           images: p.images.map((img) => ({
             id: img.id,
-            src: img.src,
+            src: getImageUrl(img.src),
             alt: img.alt || p.name,
             name: img.name || img.src,
           })),

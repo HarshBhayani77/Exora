@@ -15,6 +15,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { adminFetch } from "@/lib/admin-api";
+import { getImageUrl } from "@/lib/storage";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -228,7 +229,8 @@ export default function AdminProductsPage() {
               </thead>
               <tbody className="divide-y divide-dark/5">
                 {filteredProducts.map((p) => {
-                  const img = p.images?.[0]?.src || "/images/placeholder.jpg";
+                  const rawSrc = p.images?.[0]?.src || "";
+                  const img = rawSrc ? getImageUrl(rawSrc) : "/images/placeholder.jpg";
                   return (
                     <tr key={p.id} className="hover:bg-cream/40 transition">
                       <td className="py-3.5 pl-2">

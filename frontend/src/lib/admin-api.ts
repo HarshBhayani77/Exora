@@ -1,7 +1,11 @@
 // Dedicated Studio Admin API Client for EXORA Frontend
 
-export const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+export const BACKEND_URL = (
+  process.env.BACKEND_URL ||
+  process.env.INTERNAL_BACKEND_URL ||
+  process.env.NEXT_PUBLIC_BACKEND_URL ||
+  "http://localhost:3001"
+).replace(/\/+$/, "");
 
 export interface AdminUser {
   id: string | number;

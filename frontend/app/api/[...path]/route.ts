@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL =
+const BACKEND_URL = (
   process.env.BACKEND_URL ||
+  process.env.INTERNAL_BACKEND_URL ||
   process.env.NEXT_PUBLIC_BACKEND_URL ||
-  "http://localhost:3001";
+  "http://localhost:3001"
+).replace(/\/+$/, "");
 
 async function proxyHandler(
   request: NextRequest,

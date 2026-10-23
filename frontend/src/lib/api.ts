@@ -2,20 +2,31 @@ import { getImageUrl } from "./storage";
 import { PRODUCTS } from "./products-data";
 import type { Product, Category } from "@/types";
 
-const BACKEND_BASE =
-  typeof window !== "undefined"
-    ? ""
-    : process.env.BACKEND_URL ||
-      process.env.INTERNAL_BACKEND_URL ||
-      process.env.NEXT_PUBLIC_BACKEND_URL ||
-      "http://localhost:3001";
+/**
+ * Resolves API endpoint URL:
+ * - On client (browser): relative URL (e.g. "/api/categories") routed via Vercel's unified /api rewrite
+ * - On server: uses BACKEND_URL injected by Vercel Services binding (or fallback to local dev port 3001)
+ */
+function getBackendUrl(endpoint: string): string {
+  if (typeof window !== "undefined") {
+    return endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  }
+  const base = (
+    process.env.BACKEND_URL ||
+    process.env.INTERNAL_BACKEND_URL ||
+    process.env.NEXT_PUBLIC_BACKEND_URL ||
+    "http://localhost:3001"
+  ).replace(/\/+$/, "");
+  const path = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  return `${base}${path}`;
+}
 
 /**
  * Fetch all categories from backend database
  */
 export async function getCategories(): Promise<Category[]> {
   try {
-    const res = await fetch(`${BACKEND_BASE}/api/categories`, { cache: "no-store" });
+    const res = await fetch(getBackendUrl("/api/categories"), { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
       if (data.success && Array.isArray(data.categories)) {
@@ -39,7 +50,7 @@ export async function getCategories(): Promise<Category[]> {
  */
 export async function getProducts(): Promise<Product[]> {
   try {
-    const res = await fetch(`${BACKEND_BASE}/api/products`, { cache: "no-store" });
+    const res = await fetch(getBackendUrl("/api/products"), { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
       if (data.success && Array.isArray(data.products) && data.products.length > 0) {
@@ -71,7 +82,7 @@ export async function getProducts(): Promise<Product[]> {
  */
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   try {
-    const res = await fetch(`${BACKEND_BASE}/api/products/${slug}`, { cache: "no-store" });
+    const res = await fetch(getBackendUrl(`/api/products/${slug}`), { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
       if (data.success && data.product) {

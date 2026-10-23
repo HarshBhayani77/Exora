@@ -9,15 +9,24 @@ const nextConfig: NextConfig = {
     root: path.dirname(projectRoot),
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
         hostname: "pub-2a5d8e5eaff3498da143b1150b20a7c1.r2.dev",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.r2.dev",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
       },
     ],
-    formats: ["image/avif", "image/webp"],
-    deviceSizes: [390, 640, 828, 1080, 1200, 1920],
-    minimumCacheTTL: 31536000,
   },
 };
 

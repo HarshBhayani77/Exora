@@ -13,10 +13,15 @@ export function getImageUrl(path: string): string {
   if (!path) return "";
 
   // If path is already a full URL, return it
-  if (path.startsWith("http")) return path;
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
 
   // Remove leading slash if present
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+
+  // Avoid duplicating folder if path already starts with it
+  if (cleanPath.startsWith(R2_IMAGE_PATH + "/")) {
+    return `${R2_PUBLIC_URL}/${cleanPath}`;
+  }
 
   // Return Cloudflare R2 public URL with folder path
   return `${R2_PUBLIC_URL}/${R2_IMAGE_PATH}/${cleanPath}`;
